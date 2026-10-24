@@ -72,7 +72,7 @@ struct LibraryView: View {
             ) { result in
                 guard case .success(let urls) = result else { return }
                 if importingFolder {
-                    urls.first.map(library.linkFolder)
+                    if let folder = urls.first { library.linkFolder(folder) }
                 } else {
                     library.importItems(urls)
                 }
@@ -220,7 +220,7 @@ struct LinkedFoldersView: View {
                     ForEach(library.folders) { folder in
                         Label(folder.name, systemImage: "folder")
                     }
-                    .onDelete(perform: library.unlinkFolders)
+                    .onDelete { library.unlinkFolders(at: $0) }
                 } footer: {
                     Text("Linked folders are scanned in place without copying. Swipe to unlink; your files are not deleted. Songs in Files › On My iPhone › MicDrop are always included.")
                 }

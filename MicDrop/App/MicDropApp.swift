@@ -43,7 +43,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     /// The app's folder only shows up under "On My iPhone" in Files once it has something in it.
-    private static func createReadmeIfEmpty() {
+    nonisolated private static func createReadmeIfEmpty() {
         let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let contents = (try? FileManager.default.contentsOfDirectory(atPath: documents.path)) ?? []
         guard contents.isEmpty else { return }

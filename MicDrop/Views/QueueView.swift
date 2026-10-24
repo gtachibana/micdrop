@@ -36,8 +36,8 @@ struct QueueView: View {
                                 .tint(.pink)
                             }
                     }
-                    .onDelete(perform: queue.remove(atOffsets:))
-                    .onMove(perform: queue.move(fromOffsets:toOffset:))
+                    .onDelete { queue.remove(atOffsets: $0) }
+                    .onMove { queue.move(fromOffsets: $0, toOffset: $1) }
                 } header: {
                     Text("Up Next")
                 } footer: {
