@@ -1,0 +1,68 @@
+name: MicDrop
+options:
+  bundleIdPrefix: com.gtachibana
+  deploymentTarget:
+    iOS: "17.0"
+packages:
+  ZIPFoundation:
+    url: https://github.com/weichsel/ZIPFoundation
+    from: "0.9.19"
+targets:
+  MicDrop:
+    type: application
+    platform: iOS
+    sources: [MicDrop]
+    dependencies:
+      - package: ZIPFoundation
+    scheme: {}
+    info:
+      path: MicDrop/Info.plist
+      properties:
+        CFBundleDisplayName: MicDrop
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UIBackgroundModes: [audio]
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
+        ITSAppUsesNonExemptEncryption: false
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: com.gtachibana.micdrop.cdg
+            UTTypeDescription: CD+G Karaoke Graphics
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [cdg]
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: Karaoke Media
+            LSHandlerRank: Alternate
+            LSItemContentTypes:
+              - com.gtachibana.micdrop.cdg
+              - public.zip-archive
+              - public.mp3
+              - public.mpeg-4
+              - public.mpeg-4-audio
+              - com.apple.quicktime-movie
+              - public.audio
+              - public.movie
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.gtachibana.micdrop
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGNING_ALLOWED: "NO"
+        CODE_SIGNING_REQUIRED: "NO"
