@@ -19,6 +19,10 @@ Any of these:
 2. In the app: **Songs → + → Import Files…**
 3. **Songs → + → Link Folder…** to scan a folder in place, e.g. an iCloud Drive folder.
 4. **AirDrop / Share → MicDrop** from another app.
+5. **Songs → + → Get from OpenKJ…** to search an [OpenKJ](https://github.com/gtachibana/OpenKJ) library on
+   your network and download songs (MP3+CDG pairs arrive as one zip). In OpenKJ, turn on Local Mode and its
+   embedded server and set an admin password, then connect with the PC's IP address and that password.
+   Downloads go in the `OpenKJ` subfolder.
 
 Name files `Artist - Title.mp3` + `Artist - Title.cdg` (or `.zip`). A disc ID prefix such as
 `SC8123-05 - Artist - Title` is ignored. If your files are named `Title - Artist`, change that in Settings.

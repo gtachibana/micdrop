@@ -119,7 +119,7 @@ final class LibraryStore: ObservableObject {
         }
     }
 
-    nonisolated private static func uniqueDestination(for name: String, in folder: URL) -> URL {
+    nonisolated static func uniqueDestination(for name: String, in folder: URL) -> URL {
         let fm = FileManager.default
         var candidate = folder.appendingPathComponent(name)
         let base = (name as NSString).deletingPathExtension
