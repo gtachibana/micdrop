@@ -26,6 +26,10 @@ targets:
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
         ITSAppUsesNonExemptEncryption: false
+        NSLocalNetworkUsageDescription: MicDrop connects to OpenKJ on your network to download songs.
+        # OpenKJ's server is plain HTTP on the home network.
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: true
         UISupportedInterfaceOrientations:

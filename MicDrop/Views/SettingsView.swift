@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject private var library: LibraryStore
+    @EnvironmentObject private var openKJ: OpenKJStore
     @AppStorage(SettingsKey.autoAdvance) private var autoAdvance = true
     @AppStorage(SettingsKey.keepAwake) private var keepAwake = true
     @AppStorage(SettingsKey.lyricsOffset) private var lyricsOffset = 0.0
@@ -32,6 +33,19 @@ struct SettingsView: View {
                     Text("Library")
                 } footer: {
                     Text("Disc IDs at the start of a name, like \"SC8123-05 - \", are ignored.")
+                }
+
+                Section {
+                    if openKJ.isSignedIn {
+                        LabeledContent("Server", value: openKJ.host)
+                        Button("Disconnect", role: .destructive) { openKJ.signOut() }
+                    } else {
+                        LabeledContent("Server", value: "Not connected")
+                    }
+                } header: {
+                    Text("OpenKJ")
+                } footer: {
+                    Text("Download songs from OpenKJ on your network with Songs › + › Get from OpenKJ. They're saved in the MicDrop folder under OpenKJ.")
                 }
 
                 Section("Using a TV") {

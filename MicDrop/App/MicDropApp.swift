@@ -12,6 +12,7 @@ struct MicDropApp: App {
                 .environmentObject(LibraryStore.shared)
                 .environmentObject(QueueStore.shared)
                 .environmentObject(PlayerController.shared)
+                .environmentObject(OpenKJStore.shared)
                 .onOpenURL { url in
                     LibraryStore.shared.importItems([url])
                 }

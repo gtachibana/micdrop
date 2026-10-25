@@ -20,6 +20,7 @@ struct LibraryView: View {
     @State private var showImporter = false
     @State private var importingFolder = false
     @State private var showingFolders = false
+    @State private var showingOpenKJ = false
 
     var body: some View {
         NavigationStack {
@@ -80,6 +81,11 @@ struct LibraryView: View {
             .sheet(isPresented: $showingFolders) {
                 LinkedFoldersView().environmentObject(library)
             }
+            .sheet(isPresented: $showingOpenKJ) {
+                OpenKJView()
+                    .environmentObject(library)
+                    .environmentObject(OpenKJStore.shared)
+            }
         }
         .miniPlayerInset()
     }
@@ -136,6 +142,9 @@ struct LibraryView: View {
                 importingFolder = true
                 showImporter = true
             }
+            Button("Get from OpenKJ") {
+                showingOpenKJ = true
+            }
         }
     }
 
@@ -163,6 +172,11 @@ struct LibraryView: View {
                     showImporter = true
                 } label: {
                     Label("Link Folder…", systemImage: "folder.badge.plus")
+                }
+                Button {
+                    showingOpenKJ = true
+                } label: {
+                    Label("Get from OpenKJ…", systemImage: "server.rack")
                 }
                 Button {
                     showingFolders = true
