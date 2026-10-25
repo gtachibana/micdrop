@@ -103,9 +103,10 @@ final class OpenKJStore: ObservableObject {
     }
 
     init() {
-        host = UserDefaults.standard.string(forKey: Self.hostKey) ?? ""
+        let savedHost = UserDefaults.standard.string(forKey: Self.hostKey) ?? ""
+        host = savedHost
         token = UserDefaults.standard.string(forKey: Self.tokenKey)
-        isSignedIn = !host.isEmpty && Keychain.get(Self.passwordAccount) != nil
+        isSignedIn = !savedHost.isEmpty && Keychain.get(Self.passwordAccount) != nil
     }
 
     // MARK: - Session
