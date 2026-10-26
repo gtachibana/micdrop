@@ -13,7 +13,8 @@ final class AudioFileEngine {
     private var pausedTime: Double = 0
     private var lastKnownTime: Double = 0
     private var generation = 0
-    private var configObserver: AnyCancellable?
+    private var outputLatency: Double = 0
+    private var observers: Set<AnyCancellable> = []
 
     private(set) var isPlaying = false
     var onFinish: (() -> Void)?
@@ -29,10 +30,18 @@ final class AudioFileEngine {
         try engine.start()
         schedule(from: 0)
 
-        configObserver = NotificationCenter.default
+        updateOutputLatency()
+
+        NotificationCenter.default
             .publisher(for: .AVAudioEngineConfigurationChange, object: engine)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in self?.recoverFromConfigurationChange() }
+            .store(in: &observers)
+        NotificationCenter.default
+            .publisher(for: AVAudioSession.routeChangeNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.updateOutputLatency() }
+            .store(in: &observers)
     }
 
     var duration: Double { Double(file.length) / sampleRate }
@@ -43,7 +52,10 @@ final class AudioFileEngine {
               nodeTime.isSampleTimeValid,
               let playerTime = playerNode.playerTime(forNodeTime: nodeTime)
         else { return pausedTime }
-        let time = min(max(Double(startFrame + playerTime.sampleTime) / sampleRate, 0), duration)
+        // The render clock runs ahead of what's audible by the output latency (large over
+        // Bluetooth/AirPlay). Latency is in real time, so scale it to file time by the tempo.
+        let rendered = Double(startFrame + playerTime.sampleTime) / sampleRate
+        let time = min(max(rendered - outputLatency * Double(timePitch.rate), 0), duration)
         lastKnownTime = time
         return time
     }
@@ -62,6 +74,7 @@ final class AudioFileEngine {
     func play() {
         guard !isPlaying else { return }
         if !engine.isRunning { try? engine.start() }
+        updateOutputLatency()
         playerNode.play()
         isPlaying = true
     }
@@ -113,12 +126,18 @@ final class AudioFileEngine {
         }
     }
 
+    private func updateOutputLatency() {
+        let session = AVAudioSession.sharedInstance()
+        outputLatency = session.outputLatency + session.ioBufferDuration + timePitch.auAudioUnit.latency
+    }
+
     /// The engine stops itself when the output route changes (e.g. headphones unplugged).
     /// Resume from where we were, paused, like other audio apps do.
     private func recoverFromConfigurationChange() {
         let time = lastKnownTime
         isPlaying = false
         try? engine.start()
+        updateOutputLatency()
         schedule(from: AVAudioFramePosition(time * sampleRate))
     }
 }
